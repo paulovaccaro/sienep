@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./mvnw.cmd compile *)",
+      "Bash(Get-Content *)",
+      "PowerShell(cd \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\"; powershell -ExecutionPolicy Bypass -File \".\\\\test_sienep.ps1\" 2>&1)",
+      "PowerShell(Stop-Process *)"
+    ]
+  }
+}
