@@ -41,7 +41,7 @@ public class EstudianteController {
         EstudianteResponseDto dto = estudianteService.obtenerDtoPorId(id);
         boolean esPropietario = userId.equals(id);
         List<Integer> grupos = permisoService.gruposAccesibles(userId, "estudiantes.leer");
-        if (!esPropietario && grupos.isEmpty())
+        if (!esPropietario && !grupos.contains(dto.getIdGrupo()))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         return ResponseEntity.ok(dto);
     }
