@@ -22,6 +22,7 @@ public class RecordatorioService {
     private final InstanciaService instanciaService;
     private final NotificacionService notificacionService;
     private final GoogleCalendarService googleCalendarService;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<Recordatorio> listarTodos() {
@@ -69,6 +70,7 @@ public class RecordatorioService {
         r = recordatorioRepository.save(r);
         Recordatorio saved = recordatorioRepository.findByIdWithDetails(r.getIdRecordatorio()).orElseThrow();
         googleCalendarService.crearDesdeRecordatorio(saved);
+        auditoriaService.registrar("CREAR", "recordatorios", String.valueOf(saved.getIdRecordatorio()), titulo);
         return saved;
     }
 
@@ -87,7 +89,9 @@ public class RecordatorioService {
                     .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada: " + idCategoria)));
         }
         recordatorioRepository.save(r);
-        return recordatorioRepository.findByIdWithDetails(r.getIdRecordatorio()).orElseThrow();
+        Recordatorio updated = recordatorioRepository.findByIdWithDetails(r.getIdRecordatorio()).orElseThrow();
+        auditoriaService.registrar("MODIFICAR", "recordatorios", String.valueOf(id), updated.getTitulo());
+        return updated;
     }
 
     @Transactional
@@ -95,6 +99,7 @@ public class RecordatorioService {
         Recordatorio r = obtenerPorId(id);
         r.setEstActivo(false);
         recordatorioRepository.save(r);
+        auditoriaService.registrar("BAJA", "recordatorios", String.valueOf(id), r.getTitulo());
     }
 
     @Transactional(readOnly = true)

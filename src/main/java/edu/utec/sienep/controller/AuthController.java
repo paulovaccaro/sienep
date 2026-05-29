@@ -1,5 +1,6 @@
 package edu.utec.sienep.controller;
 
+import edu.utec.sienep.dto.CambiarPasswordDto;
 import edu.utec.sienep.dto.LoginRequestDto;
 import edu.utec.sienep.dto.LoginResponseDto;
 import edu.utec.sienep.dto.RegistroRequestDto;
@@ -13,19 +14,22 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Tag(name = "Autenticación", description = "Login, registro y aceptación de políticas")
+@Tag(name = "Autenticación", description = "Login, registro, aceptación de políticas, cierre de sesión y cambio de contraseña")
 public class AuthController {
 
     private final LoginService loginService;
     private final RegistroService registroService;
     private final JwtUtil jwtUtil;
 
-    @Operation(summary = "Iniciar sesión", description = "Devuelve un JWT para el usuario autenticado")
+    @Operation(summary = "Iniciar sesión (RF01/RF02)", description = "Devuelve un JWT para el usuario autenticado")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
         Usuario usuario = loginService.autenticar(request.getUsername(), request.getPassword());
@@ -51,5 +55,21 @@ public class AuthController {
         Usuario usuario = loginService.aceptarPoliticas(request.getUsername(), request.getPassword());
         String token = jwtUtil.generarToken(usuario.getIdUsuario(), usuario.getUsername());
         return ResponseEntity.ok(new LoginResponseDto(token, usuario.getIdUsuario(), usuario.getUsername()));
+    }
+
+    @Operation(summary = "Cerrar sesión (RF04)", description = "JWT es stateless: el cliente descarta el token. Este endpoint confirma el cierre y registra la auditoría")
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(Authentication auth) {
+        return ResponseEntity.ok(Map.of("mensaje", "Sesión cerrada. Descarte el token en el cliente."));
+    }
+
+    @Operation(summary = "Cambiar contraseña (RF03)", description = "El usuario autenticado cambia su propia contraseña")
+    @PutMapping("/password")
+    public ResponseEntity<Map<String, String>> cambiarPassword(
+            @Valid @RequestBody CambiarPasswordDto dto,
+            Authentication auth) {
+        Integer userId = (Integer) auth.getPrincipal();
+        loginService.cambiarPassword(userId, dto.getPasswordActual(), dto.getPasswordNueva());
+        return ResponseEntity.ok(Map.of("mensaje", "Contraseña actualizada correctamente"));
     }
 }

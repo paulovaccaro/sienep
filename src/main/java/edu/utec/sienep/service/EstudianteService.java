@@ -25,6 +25,7 @@ public class EstudianteService {
     private final EstudianteRepository estudianteRepository;
     private final GrupoRepository grupoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditoriaService auditoriaService;
 
     @Transactional
     public Estudiante registrar(String cedula, String nombre, String apellido,
@@ -76,7 +77,9 @@ public class EstudianteService {
         estudiante.setUsuario(usuario);
         estudiante.setGrupo(grupo);
         estudiante.setEstActivo(false);
-        return estudianteRepository.save(estudiante);
+        Estudiante saved = estudianteRepository.save(estudiante);
+        auditoriaService.registrar("CREAR", "estudiantes", String.valueOf(saved.getUsuario().getIdUsuario()), cedula);
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -137,7 +140,9 @@ public class EstudianteService {
         }
 
         usuarioRepository.save(usuario);
-        return estudianteRepository.save(estudiante);
+        Estudiante saved = estudianteRepository.save(estudiante);
+        auditoriaService.registrar("MODIFICAR", "estudiantes", String.valueOf(idUsuario), nombre);
+        return saved;
     }
 
     @Transactional
@@ -145,6 +150,7 @@ public class EstudianteService {
         Estudiante estudiante = obtenerPorId(idUsuario);
         estudiante.setEstActivo(false);
         estudianteRepository.save(estudiante);
+        auditoriaService.registrar("BAJA", "estudiantes", String.valueOf(idUsuario), null);
     }
 
     @Transactional(readOnly = true)

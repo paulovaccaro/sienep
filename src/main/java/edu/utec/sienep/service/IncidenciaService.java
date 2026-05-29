@@ -17,6 +17,7 @@ public class IncidenciaService {
 
     private final IncidenciaRepository incidenciaRepository;
     private final InstanciaRepository instanciaRepository;
+    private final AuditoriaService auditoriaService;
 
     @Transactional
     public Incidencia crear(Integer idInstancia, String lugar) {
@@ -29,7 +30,9 @@ public class IncidenciaService {
         Incidencia inc = new Incidencia();
         inc.setInstancia(instancia);
         inc.setLugar(lugar);
-        return incidenciaRepository.save(inc);
+        Incidencia saved = incidenciaRepository.save(inc);
+        auditoriaService.registrar("CREAR", "incidencias", String.valueOf(saved.getInstancia().getIdInstancia()), lugar);
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +63,7 @@ public class IncidenciaService {
         Incidencia inc = obtenerPorId(id);
         inc.getInstancia().setEstActivo(false);
         instanciaRepository.save(inc.getInstancia());
+        auditoriaService.registrar("BAJA", "incidencias", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)

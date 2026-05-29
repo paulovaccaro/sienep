@@ -25,6 +25,7 @@ public class RegistroService {
     private final GrupoRepository grupoRepository;
     private final AsignacionRepository asignacionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditoriaService auditoriaService;
 
     @Transactional
     public Usuario registrarFuncionario(String cedula, String nombre, String apellido,
@@ -98,6 +99,8 @@ public class RegistroService {
         asignacion.setEstActivo(true);
         asignacionRepository.save(asignacion);
 
+        auditoriaService.registrar(usuario.getIdUsuario(), "CREAR", "funcionarios",
+                String.valueOf(usuario.getIdUsuario()), cedula);
         return usuario;
     }
 }

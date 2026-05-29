@@ -3,7 +3,10 @@ package edu.utec.sienep.controller;
 import edu.utec.sienep.dto.EstudianteCreateDto;
 import edu.utec.sienep.dto.EstudianteResponseDto;
 import edu.utec.sienep.dto.EstudianteUpdateDto;
+import edu.utec.sienep.dto.InstanciaFromEstudianteDto;
+import edu.utec.sienep.dto.InstanciaResponseDto;
 import edu.utec.sienep.service.EstudianteService;
+import edu.utec.sienep.service.InstanciaService;
 import edu.utec.sienep.service.PermisoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +26,7 @@ import java.util.List;
 public class EstudianteController {
 
     private final EstudianteService estudianteService;
+    private final InstanciaService instanciaService;
     private final PermisoService permisoService;
 
     @Operation(summary = "Listar estudiantes accesibles", description = "Devuelve los estudiantes de los grupos accesibles para el usuario autenticado")
@@ -75,7 +79,7 @@ public class EstudianteController {
         );
     }
 
-    @Operation(summary = "Desactivar estudiante")
+    @Operation(summary = "Desactivar estudiante (RF06 – baja lógica)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desactivar(@PathVariable Integer id, Authentication auth) {
         Integer userId = (Integer) auth.getPrincipal();
@@ -84,5 +88,22 @@ public class EstudianteController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         estudianteService.desactivar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Crear instancia desde ficha de alumno (RF18)",
+               description = "Crea una Instancia vinculada al estudiante como participante; el funcionario autenticado queda como creador")
+    @PostMapping("/{idEstudiante}/instancias")
+    public ResponseEntity<InstanciaResponseDto> crearInstancia(
+            @PathVariable Integer idEstudiante,
+            @Valid @RequestBody InstanciaFromEstudianteDto dto,
+            Authentication auth) {
+        Integer userId = (Integer) auth.getPrincipal();
+        if (!permisoService.tienePermisoGlobal(userId, "instancias.crear"))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            instanciaService.crearDesdeEstudianteDto(
+                    dto.getTitulo(), dto.getTipo(), dto.getFecHora(),
+                    dto.getDescripcion(), userId, dto.getIdCategoria(), idEstudiante)
+        );
     }
 }

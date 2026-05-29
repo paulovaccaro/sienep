@@ -77,4 +77,18 @@ public class NotificacionService {
                                              String mensaje, String destinatario) {
         return NotificacionResponseDto.from(crear(idInstancia, asunto, mensaje, destinatario));
     }
+
+    /** Variante que recibe la entidad Instancia ya cargada (evita el lookup adicional). */
+    @Transactional
+    public Notificacion crearConInstancia(Instancia instancia, String asunto,
+                                          String mensaje, String destinatario) {
+        Notificacion notif = new Notificacion();
+        notif.setInstancia(instancia);
+        notif.setAsunto(asunto);
+        notif.setMensaje(mensaje);
+        notif.setDestinatario(destinatario);
+        notif.setFecEnvio(LocalDate.now());
+        notif.setEstActivo(true);
+        return notificacionRepository.save(notif);
+    }
 }
