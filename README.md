@@ -833,16 +833,24 @@ Permite explorar y probar todos los endpoints directamente desde el navegador. P
 PostgreSQL (hosteado en Supabase)
 
 ### Script SQL
-El archivo `Script_SQL_SIENEP_v2.sql` contiene el esquema completo para una instalación desde cero.
 
-### Migración incremental
-El archivo `migration_categorias_instancia.sql` aplica los cambios sobre una base existente:
-- Tabla `categorias_recordatorio`
-- Tabla `recordatorios`
-- Tabla `categorias_instancia`
-- Columna `id_categoria_instancia` en `instancias`
-- Tabla `eventos_calendario`
-- Permisos nuevos
+El esquema completo vive en:
+
+```
+src/main/resources/schema.sql
+```
+
+Crea todas las tablas desde cero en el orden correcto (respetando FKs). Es el único script necesario para una instalación limpia.
+
+**Ejecutar antes de iniciar la aplicación:**
+
+```bash
+psql -U <usuario> -d <base_de_datos> -f src/main/resources/schema.sql
+```
+
+> El archivo `src/main/resources/migrations/recordatorios.sql` es una migración incremental histórica. Su contenido ya está incluido en `schema.sql`; no es necesario ejecutarlo en instalaciones nuevas.
+
+> **No** agregues `spring.sql.init.mode` ni `spring.datasource.schema` al `application.properties`. Con `ddl-auto=validate`, Hibernate valida el esquema **antes** de que Spring ejecute la inicialización SQL, lo que rompería el arranque. El script se corre **manualmente** con `psql`.
 
 ### Tablas principales
 
