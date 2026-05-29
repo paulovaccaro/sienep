@@ -61,7 +61,7 @@ API RESTful desarrollada con Spring Boot para UTEC (Universidad Tecnológica del
 
 - Java 21+
 - Maven 3.9+ (o usar el wrapper `./mvnw`)
-- Acceso a la base de datos PostgreSQL configurada en `application.properties`
+- Acceso a la base de datos PostgreSQL (Supabase)
 
 ---
 
@@ -69,15 +69,30 @@ API RESTful desarrollada con Spring Boot para UTEC (Universidad Tecnológica del
 
 ### Variables de entorno
 
-| Variable | Descripción | Default |
+La aplicación lee la configuración sensible desde un archivo `.env` en la raíz del proyecto (al lado de `pom.xml`). Este archivo **nunca se commitea** — está en `.gitignore`.
+
+**Paso 1:** copiar el ejemplo y completar los valores reales:
+
+```bash
+cp .env.example .env
+# Editar .env con los valores reales
+```
+
+| Variable | Descripción | Requerida |
 |---|---|---|
-| `JWT_SECRET` | Clave secreta para firmar JWT (mínimo 256 bits) | Valor de desarrollo incluido |
+| `DB_PASSWORD` | Contraseña de la base de datos PostgreSQL (Supabase) | Sí |
+| `JWT_SECRET` | Clave secreta para firmar JWT (mínimo 256 bits / 32 caracteres) | No — tiene valor de desarrollo por defecto |
+
+> **Importante:** el `.env` va en la raíz del proyecto (al lado de `pom.xml`), no dentro de `src/`. Se lee en runtime mediante `spring.config.import` y **no se empaqueta en el jar**.
 
 ### Ejecutar localmente
 
 ```bash
 # Clonar el repositorio y posicionarse en la carpeta
 cd sienep
+
+# Crear y completar el .env (ver sección anterior)
+cp .env.example .env
 
 # Compilar
 ./mvnw clean compile
@@ -88,14 +103,9 @@ cd sienep
 
 La aplicación inicia en `http://localhost:8080`.
 
-### Configuración de base de datos (`application.properties`)
+### Configuración de base de datos
 
-```properties
-spring.datasource.url=jdbc:postgresql://<host>:5432/postgres?sslmode=require
-spring.datasource.username=<usuario>
-spring.datasource.password=<contraseña>
-spring.jpa.hibernate.ddl-auto=validate
-```
+La URL de conexión, usuario y contraseña están en `src/main/resources/application.properties`. La contraseña se inyecta desde el `.env` vía `${DB_PASSWORD}` — **no editar `application.properties` para poner credenciales directamente**.
 
 > **Importante:** `ddl-auto=validate` exige que el esquema en la base de datos coincida exactamente con las entidades JPA. Ejecutar el script SQL antes de iniciar la aplicación.
 
