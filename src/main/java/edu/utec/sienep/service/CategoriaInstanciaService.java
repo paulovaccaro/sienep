@@ -14,6 +14,7 @@ import java.util.List;
 public class CategoriaInstanciaService {
 
     private final CategoriaInstanciaRepository repo;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<CategoriaInstancia> listarTodas() {
@@ -32,7 +33,9 @@ public class CategoriaInstanciaService {
         c.setNombre(nombre);
         c.setDescripcion(descripcion);
         c.setEstActivo(true);
-        return repo.save(c);
+        CategoriaInstancia saved = repo.save(c);
+        auditoriaService.registrar("CREAR", "categorias_instancia", String.valueOf(saved.getIdCategoriaInstancia()), nombre);
+        return saved;
     }
 
     @Transactional
@@ -40,7 +43,9 @@ public class CategoriaInstanciaService {
         CategoriaInstancia c = obtenerPorId(id);
         if (nombre != null) c.setNombre(nombre);
         if (descripcion != null) c.setDescripcion(descripcion);
-        return repo.save(c);
+        CategoriaInstancia saved = repo.save(c);
+        auditoriaService.registrar("MODIFICAR", "categorias_instancia", String.valueOf(id), null);
+        return saved;
     }
 
     @Transactional
@@ -48,6 +53,7 @@ public class CategoriaInstanciaService {
         CategoriaInstancia c = obtenerPorId(id);
         c.setEstActivo(false);
         repo.save(c);
+        auditoriaService.registrar("BAJA", "categorias_instancia", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)

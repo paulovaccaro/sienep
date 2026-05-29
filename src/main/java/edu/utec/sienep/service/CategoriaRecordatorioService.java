@@ -14,6 +14,7 @@ import java.util.List;
 public class CategoriaRecordatorioService {
 
     private final CategoriaRecordatorioRepository repo;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<CategoriaRecordatorio> listarTodas() {
@@ -32,7 +33,9 @@ public class CategoriaRecordatorioService {
         c.setNombre(nombre);
         c.setDescripcion(descripcion);
         c.setEstActivo(true);
-        return repo.save(c);
+        CategoriaRecordatorio saved = repo.save(c);
+        auditoriaService.registrar("CREAR", "categorias_recordatorio", String.valueOf(saved.getIdCategoriaRecordatorio()), nombre);
+        return saved;
     }
 
     @Transactional
@@ -40,7 +43,9 @@ public class CategoriaRecordatorioService {
         CategoriaRecordatorio c = obtenerPorId(id);
         if (nombre != null) c.setNombre(nombre);
         if (descripcion != null) c.setDescripcion(descripcion);
-        return repo.save(c);
+        CategoriaRecordatorio saved = repo.save(c);
+        auditoriaService.registrar("MODIFICAR", "categorias_recordatorio", String.valueOf(id), null);
+        return saved;
     }
 
     @Transactional
@@ -48,6 +53,7 @@ public class CategoriaRecordatorioService {
         CategoriaRecordatorio c = obtenerPorId(id);
         c.setEstActivo(false);
         repo.save(c);
+        auditoriaService.registrar("BAJA", "categorias_recordatorio", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)

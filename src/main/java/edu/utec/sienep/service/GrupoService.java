@@ -20,6 +20,7 @@ public class GrupoService {
     private final GrupoRepository grupoRepository;
     private final CarreraRepository carreraRepository;
     private final ITRRepository itrRepository;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<Grupo> listarTodos() {
@@ -56,7 +57,9 @@ public class GrupoService {
         grupo.setAnio(anio);
         grupo.setSemestre(semestre);
         grupo.setEstActivo(true);
-        return grupoRepository.save(grupo);
+        Grupo saved = grupoRepository.save(grupo);
+        auditoriaService.registrar("CREAR", "grupos", String.valueOf(saved.getIdGrupo()), nomGrupo);
+        return saved;
     }
 
     @Transactional
@@ -64,7 +67,9 @@ public class GrupoService {
         Grupo grupo = obtenerPorId(id);
         if (nomGrupo != null) grupo.setNomGrupo(nomGrupo);
         if (estActivo != null) grupo.setEstActivo(estActivo);
-        return grupoRepository.save(grupo);
+        Grupo saved = grupoRepository.save(grupo);
+        auditoriaService.registrar("MODIFICAR", "grupos", String.valueOf(id), null);
+        return saved;
     }
 
     @Transactional
@@ -72,6 +77,7 @@ public class GrupoService {
         Grupo grupo = obtenerPorId(id);
         grupo.setEstActivo(false);
         grupoRepository.save(grupo);
+        auditoriaService.registrar("BAJA", "grupos", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)

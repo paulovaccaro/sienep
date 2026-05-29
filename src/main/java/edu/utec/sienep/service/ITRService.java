@@ -17,6 +17,7 @@ public class ITRService {
 
     private final ITRRepository itrRepository;
     private final DireccionRepository direccionRepository;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<ITR> listarActivos() {
@@ -47,7 +48,9 @@ public class ITRService {
         itr.setNombre(nombre);
         itr.setDireccion(direccion);
         itr.setEstActivo(true);
-        return itrRepository.save(itr);
+        ITR saved = itrRepository.save(itr);
+        auditoriaService.registrar("CREAR", "itr", String.valueOf(saved.getIdItr()), codigo);
+        return saved;
     }
 
     @Transactional
@@ -56,7 +59,9 @@ public class ITRService {
         if (codigo != null) itr.setCodigo(codigo);
         if (nombre != null) itr.setNombre(nombre);
         if (estActivo != null) itr.setEstActivo(estActivo);
-        return itrRepository.save(itr);
+        ITR saved = itrRepository.save(itr);
+        auditoriaService.registrar("MODIFICAR", "itr", String.valueOf(id), null);
+        return saved;
     }
 
     @Transactional
@@ -64,6 +69,7 @@ public class ITRService {
         ITR itr = obtenerPorId(id);
         itr.setEstActivo(false);
         itrRepository.save(itr);
+        auditoriaService.registrar("BAJA", "itr", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)

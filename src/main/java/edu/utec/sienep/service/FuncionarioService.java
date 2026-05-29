@@ -22,6 +22,7 @@ public class FuncionarioService {
     private final UsuarioRepository usuarioRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuditoriaService auditoriaService;
 
     @Transactional
     public Funcionario registrar(String cedula, String nombre, String apellido,
@@ -54,7 +55,9 @@ public class FuncionarioService {
         Funcionario funcionario = new Funcionario();
         funcionario.setUsuario(usuario);
         funcionario.setEstActivo(false);
-        return funcionarioRepository.save(funcionario);
+        Funcionario saved = funcionarioRepository.save(funcionario);
+        auditoriaService.registrar("CREAR", "funcionarios", String.valueOf(usuario.getIdUsuario()), cedula);
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -73,6 +76,7 @@ public class FuncionarioService {
         Funcionario funcionario = obtenerPorId(idUsuario);
         funcionario.setEstActivo(false);
         funcionarioRepository.save(funcionario);
+        auditoriaService.registrar("BAJA", "funcionarios", String.valueOf(idUsuario), null);
     }
 
     @Transactional
@@ -81,7 +85,9 @@ public class FuncionarioService {
         funcionario.setEstActivo(true);
         funcionario.getUsuario().setEstActivo(true);
         usuarioRepository.save(funcionario.getUsuario());
-        return funcionarioRepository.save(funcionario);
+        Funcionario saved = funcionarioRepository.save(funcionario);
+        auditoriaService.registrar("MODIFICAR", "funcionarios", String.valueOf(idUsuario), null);
+        return saved;
     }
 
     @Transactional(readOnly = true)

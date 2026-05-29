@@ -14,6 +14,7 @@ import java.util.List;
 public class CarreraService {
 
     private final CarreraRepository carreraRepository;
+    private final AuditoriaService auditoriaService;
 
     @Transactional(readOnly = true)
     public List<Carrera> listarActivas() {
@@ -41,7 +42,9 @@ public class CarreraService {
         carrera.setNombre(nombre);
         carrera.setPlan(plan);
         carrera.setEstActivo(true);
-        return carreraRepository.save(carrera);
+        Carrera saved = carreraRepository.save(carrera);
+        auditoriaService.registrar("CREAR", "carreras", String.valueOf(saved.getIdCarrera()), codigo);
+        return saved;
     }
 
     @Transactional
@@ -51,7 +54,9 @@ public class CarreraService {
         if (nombre != null) carrera.setNombre(nombre);
         if (plan != null) carrera.setPlan(plan);
         if (estActivo != null) carrera.setEstActivo(estActivo);
-        return carreraRepository.save(carrera);
+        Carrera saved = carreraRepository.save(carrera);
+        auditoriaService.registrar("MODIFICAR", "carreras", String.valueOf(id), null);
+        return saved;
     }
 
     @Transactional
@@ -59,6 +64,7 @@ public class CarreraService {
         Carrera carrera = obtenerPorId(id);
         carrera.setEstActivo(false);
         carreraRepository.save(carrera);
+        auditoriaService.registrar("BAJA", "carreras", String.valueOf(id), null);
     }
 
     @Transactional(readOnly = true)
