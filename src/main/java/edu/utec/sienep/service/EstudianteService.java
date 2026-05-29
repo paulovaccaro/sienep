@@ -33,6 +33,7 @@ public class EstudianteService {
 
         if (!ValidadorCI.validarCI(cedula))
             throw new IllegalArgumentException("CI inválida: " + cedula);
+        cedula = ValidadorCI.normalizar(cedula);
         if (!ValidadorEdad.esMayorDe18(fecNacimiento))
             throw new IllegalArgumentException("El estudiante debe ser mayor de 18 años");
         if (password == null || password.length() < 8)

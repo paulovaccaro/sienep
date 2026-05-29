@@ -21,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -39,8 +40,12 @@ class EstudianteServiceTest {
 
     @InjectMocks EstudianteService estudianteService;
 
-    private static final String CI_VALIDA   = "12345672";
-    private static final String CI_INVALIDA = "12345678";
+    private static final String CI_VALIDA       = "12345672";
+    private static final String CI_INVALIDA     = "12345678";
+    // CI de 7 dígitos válida: "1234561" normaliza a "01234561" (verificador = 1)
+    private static final String CI_7_DIGITOS    = "1234561";
+    private static final String CI_NORMALIZADA  = "01234561";
+    private static final String CI_CON_PUNTOS   = "1.234.561";
     private static final LocalDate MAYOR_EDAD = LocalDate.of(2000, 1, 1);
     private static final LocalDate MENOR_EDAD = LocalDate.now().minusYears(16);
 
@@ -144,6 +149,53 @@ class EstudianteServiceTest {
                 estudianteService.registrar(CI_VALIDA, "Ana", "Garcia", "pass1234", MAYOR_EDAD, 99))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Grupo");
+
+        verify(estudianteRepository, never()).save(any());
+    }
+
+    // ── normalización de cédula ───────────────────────────────────────────────
+
+    @Test
+    void registrar_cedula7Digitos_seGuardaNormalizada() {
+        // "1234561" (7 dígitos) debe guardarse como "01234561" en BD
+        Grupo g = grupoMock();
+        Usuario uSaved = usuarioSaved();
+        Estudiante eSaved = estudianteSaved(uSaved, g);
+
+        when(usuarioRepository.existsByCedula(CI_NORMALIZADA)).thenReturn(false);
+        when(grupoRepository.findById(1)).thenReturn(Optional.of(g));
+        when(usuarioRepository.existsByUsername(any())).thenReturn(false);
+        when(usuarioRepository.existsByCorreo(any())).thenReturn(false);
+        when(passwordEncoder.encode("pass1234")).thenReturn("hashed");
+        when(usuarioRepository.save(any())).thenReturn(uSaved);
+        when(estudianteRepository.save(any())).thenReturn(eSaved);
+
+        estudianteService.registrar(CI_7_DIGITOS, "Ana", "Garcia", "pass1234", MAYOR_EDAD, 1);
+
+        // existsByCedula y save deben recibir la cédula NORMALIZADA (8 dígitos, sin puntos)
+        verify(usuarioRepository).existsByCedula(CI_NORMALIZADA);
+        verify(usuarioRepository).save(argThat(u -> CI_NORMALIZADA.equals(u.getCedula())));
+    }
+
+    @Test
+    void registrar_mismaCI_formatosDiferentes_detectaDuplicado() {
+        // "01234561", "1234561" y "1.234.561" representan la misma persona
+        when(usuarioRepository.existsByCedula(CI_NORMALIZADA)).thenReturn(true);
+
+        assertThatThrownBy(() ->
+                estudianteService.registrar(CI_7_DIGITOS, "Ana", "Garcia", "pass1234", MAYOR_EDAD, 1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("CI");
+
+        assertThatThrownBy(() ->
+                estudianteService.registrar(CI_CON_PUNTOS, "Ana", "Garcia", "pass1234", MAYOR_EDAD, 1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("CI");
+
+        assertThatThrownBy(() ->
+                estudianteService.registrar(CI_NORMALIZADA, "Ana", "Garcia", "pass1234", MAYOR_EDAD, 1))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("CI");
 
         verify(estudianteRepository, never()).save(any());
     }

@@ -2,14 +2,20 @@ package edu.utec.sienep.util;
 
 public class ValidadorCI {
 
+    /**
+     * Elimina puntos/guiones y rellena con cero a la izquierda si tiene 7 dígitos,
+     * de modo que el resultado siempre sea la representación canónica de 8 dígitos.
+     * No valida el dígito verificador; usar validarCI() para eso.
+     */
+    public static String normalizar(String ci) {
+        String stripped = ci.replace(".", "").replace("-", "");
+        return stripped.length() == 7 ? "0" + stripped : stripped;
+    }
+
     public static boolean validarCI(String ci) {
-        ci = ci.replace(".", "").replace("-", "");
+        ci = normalizar(ci);
 
-        if (!ci.matches("\\d{7,8}")) return false;
-
-        if (ci.length() == 7) {
-            ci = "0" + ci;
-        }
+        if (!ci.matches("\\d{8}")) return false;
 
         int[] coef = {2, 9, 8, 7, 6, 3, 4};
         int suma = 0;
