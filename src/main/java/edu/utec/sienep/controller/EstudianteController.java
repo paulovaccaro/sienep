@@ -9,6 +9,8 @@ import edu.utec.sienep.service.EstudianteService;
 import edu.utec.sienep.service.InstanciaService;
 import edu.utec.sienep.service.PermisoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,11 @@ public class EstudianteController {
     private final PermisoService permisoService;
 
     @Operation(summary = "Listar estudiantes accesibles", description = "Devuelve los estudiantes de los grupos accesibles para el usuario autenticado")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de estudiantes"),
+        @ApiResponse(responseCode = "401", description = "Sin autenticación"),
+        @ApiResponse(responseCode = "403", description = "Sin permiso estudiantes.leer en ningún grupo")
+    })
     @GetMapping
     public ResponseEntity<List<EstudianteResponseDto>> listar(Authentication auth) {
         Integer userId = (Integer) auth.getPrincipal();
@@ -51,6 +58,12 @@ public class EstudianteController {
     }
 
     @Operation(summary = "Crear estudiante", description = "Permiso: estudiantes.crear en el grupo del estudiante")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Estudiante creado (inactivo hasta que acepte políticas)"),
+        @ApiResponse(responseCode = "400", description = "CI inválida, menor de edad, password corta o CI duplicada"),
+        @ApiResponse(responseCode = "401", description = "Sin autenticación"),
+        @ApiResponse(responseCode = "403", description = "Sin permiso estudiantes.crear en el grupo indicado")
+    })
     @PostMapping
     public ResponseEntity<EstudianteResponseDto> crear(@Valid @RequestBody EstudianteCreateDto dto,
                                                        Authentication auth) {
@@ -80,6 +93,11 @@ public class EstudianteController {
     }
 
     @Operation(summary = "Desactivar estudiante (RF06 – baja lógica)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Estudiante desactivado"),
+        @ApiResponse(responseCode = "401", description = "Sin autenticación"),
+        @ApiResponse(responseCode = "403", description = "Sin permiso estudiantes.eliminar")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desactivar(@PathVariable Integer id, Authentication auth) {
         Integer userId = (Integer) auth.getPrincipal();

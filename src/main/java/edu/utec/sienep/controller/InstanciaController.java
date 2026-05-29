@@ -6,6 +6,8 @@ import edu.utec.sienep.dto.InstanciaResponseDto;
 import edu.utec.sienep.service.InstanciaService;
 import edu.utec.sienep.service.PermisoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +45,13 @@ public class InstanciaController {
         return ResponseEntity.ok(instanciaService.obtenerDtoPorId(id));
     }
 
-    @Operation(summary = "Crear instancia")
+    @Operation(summary = "Crear instancia", description = "RF10/RF14/RF15 — genera ID automático y notificación al funcionario")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Instancia creada con notificación automática"),
+        @ApiResponse(responseCode = "400", description = "Funcionario no encontrado"),
+        @ApiResponse(responseCode = "401", description = "Sin autenticación"),
+        @ApiResponse(responseCode = "403", description = "Sin permiso instancias.crear")
+    })
     @PostMapping
     public ResponseEntity<InstanciaResponseDto> crear(@Valid @RequestBody InstanciaCreateDto dto,
                                                       Authentication auth) {
@@ -70,7 +78,12 @@ public class InstanciaController {
         );
     }
 
-    @Operation(summary = "Clonar instancia", description = "Copia título/tipo/descripción/funcionario; fecHora en body opcional")
+    @Operation(summary = "Clonar instancia (RF17)", description = "Copia título/tipo/descripción/funcionario; fecHora en body opcional")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Instancia clonada con nueva notificación"),
+        @ApiResponse(responseCode = "400", description = "Instancia origen no encontrada"),
+        @ApiResponse(responseCode = "403", description = "Sin permiso instancias.crear")
+    })
     @PostMapping("/{id}/clonar")
     public ResponseEntity<InstanciaResponseDto> clonar(
             @PathVariable Integer id,
