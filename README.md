@@ -686,7 +686,7 @@ Al crear un recordatorio se genera automáticamente un **EventoCalendario**. Los
 // Response 201: InstanciaResponseDto
 ```
 
-**Valores de recurrencia:** `NINGUNA` | `DIARIA` | `SEMANAL` | `MENSUAL` | `ANUAL`
+**Valores de recurrencia:** `NINGUNA` | `DIARIA` | `SEMANAL` | `MENSUAL`
 
 ---
 
