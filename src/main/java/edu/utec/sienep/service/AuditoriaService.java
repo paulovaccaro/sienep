@@ -1,5 +1,6 @@
 package edu.utec.sienep.service;
 
+import edu.utec.sienep.dto.AuditoriaResponseDto;
 import edu.utec.sienep.entity.Auditoria;
 import edu.utec.sienep.repository.AuditoriaRepository;
 import edu.utec.sienep.repository.UsuarioRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -44,6 +46,24 @@ public class AuditoriaService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void registrar(String accion, String entidad, String idEntidad, String detalle) {
         registrar(actorIdFromContext(), accion, entidad, idEntidad, detalle);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDto> listarTodos() {
+        return auditoriaRepository.findAllByOrderByFecHoraDesc()
+                .stream().map(AuditoriaResponseDto::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDto> listarPorEntidad(String entidad, String idEntidad) {
+        return auditoriaRepository.findByEntidadAndIdEntidadOrderByFecHoraDesc(entidad, idEntidad)
+                .stream().map(AuditoriaResponseDto::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<AuditoriaResponseDto> listarPorUsuario(Integer idUsuario) {
+        return auditoriaRepository.findByUsuario_IdUsuarioOrderByFecHoraDesc(idUsuario)
+                .stream().map(AuditoriaResponseDto::from).toList();
     }
 
     private Integer actorIdFromContext() {

@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface AuditoriaRepository extends JpaRepository<Auditoria, Long> {
 
+    List<Auditoria> findAllByOrderByFecHoraDesc();
+
     List<Auditoria> findByEntidadAndIdEntidadOrderByFecHoraDesc(String entidad, String idEntidad);
 
     List<Auditoria> findByUsuario_IdUsuarioOrderByFecHoraDesc(Integer idUsuario);

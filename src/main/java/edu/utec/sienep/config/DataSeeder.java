@@ -31,6 +31,7 @@ public class DataSeeder implements ApplicationRunner {
         seedRolesYPermisos();
         seedPermisosRecordatorioSiNecesario();
         seedPermisosInstanciaSiNecesario();
+        seedPermisosAuditoriaSiNecesario();
         seedEstructuraAcademica();
     }
 
@@ -149,6 +150,23 @@ public class DataSeeder implements ApplicationRunner {
         rolPermiso(admin, p);
 
         log.info("Permiso instancias.gestionar seeded.");
+    }
+
+    private void seedPermisosAuditoriaSiNecesario() {
+        if (permisoRepo.existsByCodigo("auditoria.leer")) {
+            log.info("Permiso auditoria.leer ya presente, se omite.");
+            return;
+        }
+
+        log.info("Seeding permiso auditoria.leer...");
+
+        Rol admin = rolRepo.findByNombre("Administrador")
+                .orElseThrow(() -> new IllegalStateException("Rol Administrador no encontrado"));
+
+        Permiso p = permiso("auditoria.leer");
+        rolPermiso(admin, p);
+
+        log.info("Permiso auditoria.leer seeded.");
     }
 
     private void seedEstructuraAcademica() {
