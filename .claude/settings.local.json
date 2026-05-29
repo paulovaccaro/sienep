@@ -1,10 +1,18 @@
 {
   "permissions": {
     "allow": [
-      "Bash(./mvnw.cmd compile *)",
-      "Bash(Get-Content *)",
-      "PowerShell(cd \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\"; powershell -ExecutionPolicy Bypass -File \".\\\\test_sienep.ps1\" 2>&1)",
-      "PowerShell(Stop-Process *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(.\\\\mvnw test *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\\\\Plan de Entregables de Proyecto de Desarrollo e Infraestructura - Requerimientos Programaci�n - 2026.pdf\" \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\\\\plan.txt\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\Git\\\\mingw64\\\\bin\\\\pdftotext.exe\" \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\\\\Proyecto de Desarrollo e Infraestructura - Requerimientos Programaci�n - 2026 - SF.pdf\" \"C:\\\\Users\\\\97SERVER\\\\Desktop\\\\sienep\\\\reqs.txt\")",
+      "Bash(./mvnw compile *)",
+      "Bash(./mvnw test *)",
+      "Bash(git commit *)",
+      "Bash(Get-Content \"target\\\\surefire-reports\\\\edu.utec.sienep.AuditoriaControllerIT.txt\")",
+      "Bash(ls *.pdf)",
+      "Bash(ls *.txt)"
     ]
   }
 }

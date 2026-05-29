@@ -1,0 +1,70 @@
+Proyecto de Desarrollo e Infraestructura
+Plan de Entregables
+Este plan de entregables tiene como objetivo proporcionar una guía clara y estructurada para el avance del proyecto Backend SIENEP durante el curso. Las fechas de entrega establecidas en este plan son las siguientes:
+ Entrega 1: Sábado 30 de Mayo.
+ Entrega 2: Sábado 13 de Junio.
+ Entrega 3: Sábado 28 de Junio.
+ Entrega Final: Martes 7 de Julio.
+Es importante destacar que el no cumplimiento de las fechas de entrega será considerado como una entrega no entregada. Esto significa que se espera que los equipos entreguen los avances correspondientes en las fechas especificadas. El plan no solo establece los tiempos de entrega, sino que también orienta el progreso del proyecto a lo largo del curso.
+Sin embargo, cada equipo tiene la libertad de avanzar a su propio ritmo, siempre y cuando los entregables sean presentados en las fechas establecidas. Recuerden que la propia naturaleza de las entregas es incremental, por lo tanto, entrega a entrega, se deberán incorporar nuevas características al sistema.
+El acompañamiento y apoyo proporcionado en la unidad curricular de Backend está diseñado para facilitar el avance del proyecto, pero será responsabilidad de cada equipo gestionar su tiempo y asegurarse de que las entregas sean completas y se ajusten a los requisitos de cada fase o en su defecto mostrar un avance consistente en el transcurso del proyecto. Este cronograma busca asegurar que los proyectos tengan una evolución coherente, permitiendo la implementación progresiva y efectiva de las funcionalidades,
+siempre bajo el marco temporal definido.
+
+
+
+Área de Programación - 2026 - Universidad Tecnológica
+
+Entrega 1 ­ Setup del Proyecto, API REST Inicial y CRUD Base de Estudiantes
+Fecha: Sábado 30 de mayo.
+Nivel esperado de completitud: entre un 20% y 25% del proyecto total.
+Objetivo general En esta primera entrega se espera que el equipo presente una base funcional del proyecto backend, aplicando los contenidos trabajados hasta el momento en la unidad curricular programación backend, Spring Boot, estructura del proyecto, controladores REST, manejo de peticiones HTTP, DTOs, validaciones, servicios, repositorios, persistencia con JPA/Hibernate y documentación inicial de la API mediante Swagger/OpenAPI.
+Actividades a realizar
+ Creación del repositorio en GitLab institucional de UTEC.  Definición de una estrategia inicial de trabajo con ramas y commits claros.  Inicialización del proyecto con Spring Boot.  Configuración de PostgreSQL como base de datos del proyecto.  Configuración de JPA/Hibernate.  Configuración obligatoria de la propiedad:
+spring.jpa.hibernate.ddl-auto=validate  Definición de la estructura del proyecto en capas, contemplando como mínimo:
+controller, service, repository, entity, dto, config, exception, si corresponde.  Implementación inicial de Swagger/OpenAPI para documentar los endpoints.  Implementación de los primeros controladores REST.  Uso de DTOs para entrada y salida de datos.  Implementación de validaciones básicas con anotaciones.  Implementación de servicios con lógica de negocio inicial.  Implementación de repositorios utilizando Spring Data JPA.  Definición inicial del modelo de datos, contemplando al menos la entidad estudiante
+y las entidades necesarias para sostener el avance inicial del sistema.  Implementación de endpoints básicos para la gestión inicial de estudiantes.  Implementación del alta de estudiantes.
+Área de Programación - Universidad Tecnológica - 2026
+
+ Implementación de búsqueda o listado básico de estudiantes.  Implementación de modificación básica de estudiantes, si el equipo logra avanzar.  Implementación de baja lógica inicial de estudiantes, si el equipo logra avanzar.  Validación inicial de los datos del estudiante.  Implementación de validación de cédula uruguaya mediante dígito verificador.  Implementación de control de edad mínima cuando corresponda.
+Evidencias esperadas
+ Proyecto ejecutando correctamente.  Base de datos PostgreSQL conectada.  Estructura del proyecto organizada en capas.  Endpoints REST básicos funcionando.  Endpoint de alta de estudiantes funcionando.  Endpoint de búsqueda o listado de estudiantes funcionando.  Validaciones básicas aplicadas.  Validación de cédula uruguaya implementada.  Swagger/OpenAPI funcionando.  Repositorio GitLab con commits claros.  Participación visible de los integrantes del equipo en el repositorio.  Video explicativo de hasta 15 minutos, mostrando el avance realizado.
+Entrega 2 ­ Autenticación, Seguridad, Gestión Completa de Estudiantes e Inicio del Módulo de Instancias
+Fecha: Sábado 13 de junio.
+Nivel esperado de completitud: entre un 45% y 55% del proyecto total.
+Objetivo general En esta entrega se espera que el equipo incorpore autenticación y seguridad al backend, consolide el módulo de estudiantes y avance con una primera versión funcional del módulo de instancias. A partir de esta instancia, los endpoints deberán comenzar a protegerse mediante mecanismos de autenticación y autorización.
+Área de Programación - Universidad Tecnológica - 2026
+
+Actividades a realizar
+ Corrección de observaciones realizadas en la Entrega 1.  Mejora de la estructura general del proyecto.  Consolidación del uso de controladores, servicios, repositorios, entidades y DTOs.  Mejora del manejo de validaciones y respuestas HTTP.  Ampliación de la documentación Swagger/OpenAPI.  Implementación de Spring Security.  Implementación de autenticación mediante JWT.  Implementación del endpoint de login.  Implementación de autenticación con credenciales.  Implementación de gestión inicial de credenciales.  Implementación de cierre de sesión o mecanismo equivalente.  Implementación de almacenamiento seguro de contraseñas.  Protección de endpoints mediante token.  Control para evitar exposición de credenciales en respuestas, consultas, logs o
+mensajes de error.  Definición inicial de roles y permisos del sistema.  Finalización del CRUD funcional de estudiantes.  Implementación de modificación de estudiantes.  Implementación de baja lógica de estudiantes.  Implementación de adjunto o registro de informes médicos.  Control de acceso a datos sensibles de estudiantes.  Mejora de validaciones de cédula, edad mínima y reglas de negocio.  Implementación inicial del módulo de instancias.  Registro de instancias asociadas a estudiantes.  Categorización de instancias.  Visualización de instancias.  Generación automática de identificador de instancia.  Gestión básica de instancias.  Creación de instancia desde la ficha de un estudiante.  Avance inicial en integración con Google Calendar o estructura preparada para dicha
+integración.  Avance inicial en notificación de ID de instancia.  Ampliación de auditoría para login, altas, modificaciones y bajas lógicas.
+Área de Programación - Universidad Tecnológica - 2026
+
+ Incorporación de pruebas unitarias básicas sobre estudiantes, autenticación e instancias.
+Evidencias esperadas
+ Login funcional.  Generación y uso de token JWT.  Endpoints protegidos mediante autenticación.  CRUD completo de estudiantes funcionando.  Baja lógica de estudiantes funcionando.  Modificación de estudiantes funcionando.  Búsqueda de estudiantes actualizada.  Adjunto o referencia de informes médicos.  Instancias asociadas a estudiantes.  Generación automática de identificador de instancia.  Swagger/OpenAPI actualizado.  Pruebas básicas implementadas.  Repositorio GitLab actualizado con commits claros.  Video explicativo de hasta 15 minutos, con participación de todos los integrantes.
+Entrega 3 ­ Recordatorios, Incidencias, Roles y Administración del Sistema
+Fecha: Sábado 28 de junio.
+Nivel esperado de completitud: entre un 75% y 85% del proyecto total.
+Objetivo general En esta entrega se espera que el sistema alcance un estado avanzado de desarrollo, incorporando los módulos de recordatorios, incidencias, roles, categorías y administración. También deberán completarse o ajustarse los aspectos pendientes del módulo de instancias y fortalecerse la seguridad, auditoría y trazabilidad del sistema.
+Área de Programación - Universidad Tecnológica - 2026
+
+Actividades a realizar
+ Corrección de observaciones realizadas en la Entrega 2.  Finalización del módulo de instancias.  Implementación de clonación de instancias.  Finalización o consolidación de integración de instancias con Google Calendar.  Finalización o consolidación de notificaciones asociadas a instancias.  Implementación del módulo de recordatorios.  Creación de recordatorios.  Implementación de recordatorios recurrentes.  Asignación de tipo de recordatorio.  Generación automática de ID de recordatorio.  Gestión de recordatorios.  Visualización de recordatorios.  Creación de instancia desde recordatorio.  Integración de recordatorios con Google Calendar o simulación justificada.  Implementación de notificaciones de recordatorios.  Implementación del módulo de incidencias.  Registro de incidencias.  Visualización del historial de incidencias.  Preservación de trazabilidad e historial.  Implementación del módulo de administración y configuración.  Gestión de roles.  Definición de roles preexistentes.  Implementación de roles personalizados.  Gestión de categorías de instancias.  Gestión de categorías de recordatorios.  Aplicación de control de acceso por roles.  Ampliación de auditoría sobre operaciones relevantes.  Control de acceso a módulos y datos sensibles según rol.  Mejora del manejo global de excepciones.  Estandarización de respuestas de la API.  Mejora de pruebas unitarias y/o de integración.  Actualización completa de Swagger/OpenAPI.
+Área de Programación - Universidad Tecnológica - 2026
+
+Evidencias esperadas
+ Módulo de instancias completo funcionando.  Clonación de instancias funcionando.  Recordatorios funcionando.  Recordatorios recurrentes funcionando.  Generación de ID de recordatorio funcionando.  Creación de instancia desde recordatorio funcionando.  Incidencias funcionando.  Historial de incidencias consultable.  Roles y permisos aplicados.  Categorías de instancias administrables.  Categorías de recordatorios administrables.  Auditoría visible o consultable.  Swagger/OpenAPI actualizado.  Pruebas sobre servicios principales.  Repositorio GitLab actualizado.  Video explicativo de hasta 15 minutos, mostrando el avance funcional y técnico del
+sistema.
+Entrega Final ­ Sistema SIENEP Completo, Reportes, Pruebas, Documentación y Defensa Técnica
+Fecha: Martes 7 de julio.
+Nivel esperado de completitud: 100% del proyecto total.
+Objetivo general
+En la entrega final el sistema SIENEP deberá estar completo, integrado, probado, documentado y preparado para ser defendido técnicamente por todos los integrantes del equipo. No se considerarán suficientes funcionalidades aisladas, incompletas o no integradas.
+Área de Programación - Universidad Tecnológica - 2026
+
+Recordar que para esta entrega, deben estar implementadas, todas las consideraciones y requerimientos técnicos, presentes en la letra propuesta por el área de Programación para el presente proyecto. Evidencias esperadas
+ Sistema completo ejecutando correctamente.  RF01 a RF40 implementados, integrados y funcionando.  Módulo de reportes implementado.  Generación y exportación de reportes funcionando.  Seguridad con Spring Security y JWT funcionando.  Roles y permisos aplicados correctamente.  Auditoría y trazabilidad implementadas.  Bajas lógicas aplicadas cuando corresponda.  Validación de cédula uruguaya y control de edad mínima incorporados.  Credenciales y datos sensibles protegidos.  Swagger/OpenAPI completo y actualizado.  Pruebas automatizadas implementadas.  Uso de DTOs y al menos un patrón de diseño justificado.  Repositorio GitLab actualizado, con commits claros y participación visible del equipo.  Video final explicativo de hasta 15 minutos.  Todos los integrantes deberán poder defender técnicamente el código desarrollado.
+Área de Programación - Universidad Tecnológica - 2026
+
+
